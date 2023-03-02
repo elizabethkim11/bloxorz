@@ -1,7 +1,7 @@
 import {defs, tiny} from './examples/common.js';
 
 // Pull these names into this module's scope for convenience:
-const {vec3, vec4, color, hex_color, Mat4, Light, Shape, Material, Shader, Texture, Scene} = tiny;
+const {Vec, vec3, vec4, color, hex_color, Mat4, Light, Shape, Material, Shader, Texture, Scene} = tiny;
 const {Triangle, Square, Tetrahedron, Windmill, Cube, Subdivision_Sphere} = defs;
 
 export class Bloxorz_Base extends Scene {
@@ -31,7 +31,17 @@ export class Bloxorz_Base extends Scene {
             // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
             // orthographic() automatically generate valid matrices for one.  The input arguments of
             // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.
-            program_state.set_camera(Mat4.translation(0, 0, -10));
+            // Set camera position and target position
+            const camera_position = vec3(10, 10, -15);
+            const target_position = vec3(0, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+
+            // Create the camera matrix using the look_at function
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+            // program_state.set_camera(Mat4.translation(0, 0, -25));
         }
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, 1, 100);
