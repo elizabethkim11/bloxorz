@@ -7,6 +7,7 @@ import {Scene_To_Texture_Demo} from "./examples/scene-to-texture-demo.js"
 import {Surfaces_Demo} from "./examples/surfaces-demo.js"
 import {Text_Demo} from "./examples/text-demo.js"
 import {Transforms_Sandbox} from "./examples/transforms-sandbox.js"
+import {Bloxorz} from "./bloxorz.js";
 // Pull these names into this module's scope for convenience:
 const {
     Vector, Vector3, vec, vec3, vec4, color, Matrix, Mat4, Light, Shape, Material, Shader, Texture, Scene,
@@ -31,13 +32,14 @@ Object.assign(defs,
             {Scene_To_Texture_Demo},
             {Surfaces_Demo},
             {Text_Demo},
-            {Transforms_Sandbox});
+            {Transforms_Sandbox},
+            {Bloxorz});
 
 // ******************** End extra step
 
 // (Can define Main_Scene's class here)
 
-const Main_Scene = Transforms_Sandbox;
+const Main_Scene = Bloxorz;
 const Additional_Scenes = [];
 
 export {Main_Scene, Additional_Scenes, Canvas_Widget, Code_Widget, Text_Widget, defs}
