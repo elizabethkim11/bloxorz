@@ -19,7 +19,9 @@ export class Bloxorz_Tile extends Scene {
         const phong = new defs.Phong_Shader();
         this.materials = {
             silver: new Material(phong,
-                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("c0c0c0")})
+                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("c0c0c0")}),
+            goal: new Material(phong,
+                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")})
         };
     }
 
@@ -58,24 +60,84 @@ export class Bloxorz_Tile extends Scene {
 
 export class Tile extends Bloxorz_Tile {
     display(context, program_state) {
+        if (!context.scratchpad.controls) {
+            this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
 
+            // Define the global camera and projection matrices, which are stored in program_state.  The camera
+            // matrix follows the usual format for transforms, but with opposite values (cameras exist as
+            // inverted matrices).  The projection matrix follows an unusual format and determines how depth is
+            // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
+            // orthographic() automatically generate valid matrices for one.  The input arguments of
+            // perspective() are field of view, aspect ratio, and distances to the near plane and far plane.
+            // Set camera position and target position
+            const camera_position = vec3(10, 10, -15);
+            const target_position = vec3(0, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+
+            // Create the camera matrix using the look_at function
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+            // program_state.set_camera(Mat4.translation(0, 0, -25));
+        }
         super.display(context, program_state);
 
         const blue = hex_color("#1a9ffa"), yellow = hex_color("#fdc03a")
         // Variable model_transform will be a local matrix value that helps us position shapes.
         // It starts over as the identity every single frame - coordinate axes at the origin.
         let model_transform = Mat4.identity();
+        model_transform = model_transform.times(Mat4.translation(-15, -3, 0));
         let maxx = 3, maxz = 3;
-        for (let i = 0; i < maxz; i++) {
-            model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
-            for (let j = 0; j < maxx; j++) {
-                model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
-                this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
-                // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
-            }
-            model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
-
+        // for (let i = 0; i < maxz; i++) {
+        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
+        //     for (let j = 0; j < maxx; j++) {
+        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
+        //     }
+        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
+        //
+        // }
+        for (let i = 0; i < 3; i++) {
+            model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
         }
+        model_transform = model_transform.times(Mat4.translation(-2.02 * 3, 0, 0));
+        model_transform = model_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 6; i++) {
+            model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        }
+        model_transform = model_transform.times(Mat4.translation(-2.02 * 6, 0, 0));
+        model_transform = model_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        }
+        model_transform = model_transform.times(Mat4.translation(-2.02 * 8, 0, 0));
+        model_transform = model_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        }
+        model_transform = model_transform.times(Mat4.translation(-2.02 * 5, 0, 0));
+        model_transform = model_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 5; i++) {
+            model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i == 2) {
+                this.shapes.tile.draw(context, program_state, model_transform, this.materials.goal);
+            } else {
+                this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+            }
+        }
+        model_transform = model_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        model_transform = model_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 3; i++) {
+            model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        }
+
 
         // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
         // Draw a tile:
