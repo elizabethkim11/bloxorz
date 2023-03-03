@@ -1,37 +1,43 @@
 import {defs, tiny} from './examples/common.js';
+import {Tile} from './tile.js';
 
 // Pull these names into this module's scope for convenience:
 const {vec3, vec4, color, hex_color, Mat4, Light, Shape, Material, Shader, Texture, Scene} = tiny;
-const {Triangle, Square, Tetrahedron, Windmill, Cube, Subdivision_Sphere} = defs;
+const {Triangle, Square, Tetrahedron, Windmill, Cube, Subdivision_Sphere, Block} = defs;
 
 export class Bloxorz_Base extends Scene {
+    curr;
+    current;
     constructor() {
         super();
         this.shapes = {
-            'block': new Cube(),
+            'block': new Block(),
         }
         const phong = new defs.Phong_Shader();
         this.materials = {
             metal: new Material(phong,
                 {ambient: .2, diffusivity: .8, specularity: .8, color: color(.9, .5, .9, 1)})
         }
-        this.up = false;
-        this.left = false;
-        this.down = false;
-        this.right = false;
+        this.curr = "none";
+        this.prev = Mat4.identity();
+        this.current = Mat4.identity();
     }
     make_control_panel() {
         this.key_triggered_button("Move block up", ['i'], function () {
-            this.up = true;
+            this.curr = "up";
+            this.current = this.prev;
         });
         this.key_triggered_button("Move block left", ['j'], function () {
-            this.left = true;
+            this.curr = "left";
+            this.current = this.prev;
         });
         this.key_triggered_button("Move block down", ['k'], function () {
-            this.down = true;
+            this.curr = "down";
+            this.current = this.prev;
         });
         this.key_triggered_button("Move block right", ['l'], function () {
-            this.right = true;
+            this.curr = "right";
+            this.current = this.prev;
         });
     }
     display(context, program_state) {
@@ -69,27 +75,46 @@ export class Bloxorz_Base extends Scene {
 
 export class Bloxorz extends Bloxorz_Base {
     draw_block(context, program_state, model_transform, color) {
-        const angle = Math.PI;
-        model_transform = model_transform.times(Mat4.scale(1, 1.5, 1));
-        if (this.left) {
+        const angle = Math.PI/2;
+        if (this.curr == "left") {
+            console.log("LEFT");
             model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
-            model_transform = model_transform.times(Mat4.translation(1, 1.5, 1));
+            model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            console.log("WORKED");
+            console.log(model_transform);
+        }
+        else if (this.curr == "right") {
+            console.log("RIGHT");
+            console.log(model_transform);
+            model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
+            model_transform = model_transform.times(Mat4.translation(-1, 1, 0));
+            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
+        }
+        else if (this.curr == "up") {
+            console.log("UP");
+            console.log(model_transform);
+            model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
+            model_transform = model_transform.times(Mat4.translation(0, 1, 1));
+            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
+        }
+        else if (this.curr == "down") {
+            console.log("DOWN");
+            console.log(model_transform);
+            model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
+            model_transform = model_transform.times(Mat4.translation(0, -1, 1));
+            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else {
-            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
+                this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         return model_transform;
     }
     display(context, program_state) {
         super.display(context, program_state);
         const brown = hex_color("#7B3F00")
-        let model_transform = Mat4.identity();
-
-        for (let i = 0; i < 2; i++) {
-            model_transform = this.draw_block(context, program_state, model_transform, brown);
-        }
-
+        console.log(this.prev);
+        let model_transform = this.current;
+        model_transform = this.draw_block(context, program_state, model_transform, brown);
+        this.prev = model_transform;
     }
 }

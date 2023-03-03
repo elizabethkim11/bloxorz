@@ -7,6 +7,8 @@
     <list default="true" id="3fc61f7f-bddc-42de-9a65-824cc4897627" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bloxorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/bloxorz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/examples/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-scene.js" beforeDir="false" afterPath="$PROJECT_DIR$/main-scene.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +60,8 @@
       <updated>1677793921389</updated>
       <workItem from="1677793922809" duration="755000" />
       <workItem from="1677794687423" duration="7348000" />
-      <workItem from="1677802058212" duration="423000" />
+      <workItem from="1677802058212" duration="1829000" />
+      <workItem from="1677803902302" duration="5845000" />
     </task>
     <servers />
   </component>
@@ -75,16 +78,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/examples/transforms-sandbox.js</url>
-          <line>160</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
