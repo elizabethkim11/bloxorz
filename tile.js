@@ -27,13 +27,27 @@ export class Bloxorz_Tile extends Scene {
     display(context, program_state) {
         if (!context.scratchpad.controls) {
             this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
-            program_state.set_camera(Mat4.translation(0, 3, -10));
+
+            // Define the global camera and projection matrices, which are stored in program_state.  The camera
+            // matrix follows the usual format for transforms, but with opposite values (cameras exist as
+            // inverted matrices).  The projection matrix follows an unusual format and determines how depth is
+            // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
+            // orthographic() automatically generate valid matrices for one.  The input arguments of
+            // Set camera position and target position
+            const camera_position = vec3(10, 10, -15);
+            const target_position = vec3(0, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+
+            // Create the camera matrix using the look_at function
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+            // program_state.set_camera(Mat4.translation(0, 0, -25));
         }
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, 1, 100);
 
-        // *** Lights: *** Values of vector or point lights.  They'll be consulted by
-        // the shader when coloring shapes.  See Light's class definition for inputs.
         const t = this.t = program_state.animation_time / 1000;
         const angle = Math.sin(t);
         const light_position = Mat4.rotation(angle, 1, 0, 0).times(vec4(0, -1, 1, 0));
