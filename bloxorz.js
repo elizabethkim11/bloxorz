@@ -24,6 +24,7 @@ export class Bloxorz_Base extends Scene {
                 {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")})
         }
         this.curr = "none";
+        this.prev_pos = "lying_aft";
         this.prev = Mat4.identity();
         this.current = Mat4.identity();
         this.count = 0;
@@ -47,6 +48,15 @@ export class Bloxorz_Base extends Scene {
         this.key_triggered_button("Move block right", ['l'], function () {
             this.curr = "right";
             this.current = this.prev;
+            if (this.prev_pos == "upright_init") {
+                this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                this.prev_pos = "lying_aft";
+            } else {
+                this.prev_pos = "upright_init";
+            }
             this.count += 1;
         });
         this.new_line();
@@ -98,12 +108,26 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
             model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
+            console.log(model_transform);
         }
         else if (this.curr == "right") {
             console.log("RIGHT");
             console.log(model_transform);
-            model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
-            model_transform = model_transform.times(Mat4.translation(-1, 1, 0));
+            console.log(this.prev_pos);
+            if (this.prev_pos == "upright_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
+                // this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, -1)).times((Mat4.translation(-1, 1, 0)));
+                // this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
+                // this.prev_pos = "lying_aft";
+            } else {
+                console.log("HELP");
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
+                // this.prev_pos = "upright_init";
+            }
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else if (this.curr == "up") {
@@ -120,26 +144,13 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = model_transform.times(Mat4.translation(0, -1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
-
-        else if (this.curr == "left") {
-            console.log("LEFT");
-            model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
-            model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
-            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-        }
-        else if (this.curr == "left") {
-            console.log("LEFT");
-            model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0));
-            model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
-            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-        }
         else {
-            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
+                this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         return model_transform;
     }
     draw_tile_platform1(context, program_state, tiles_transform) {
-        tiles_transform = tiles_transform.times(Mat4.translation(-15, -2, -2));
+        tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
         // for (let i = 0; i < maxz; i++) {
         //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
@@ -189,6 +200,8 @@ export class Bloxorz extends Bloxorz_Base {
             tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
         }
+
+
         // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
         // Draw a tile:
         // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
@@ -196,7 +209,9 @@ export class Bloxorz extends Bloxorz_Base {
         tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
         // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
 
+
         const t = this.t = program_state.animation_time / 1000;
+
 
         tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
             .times(Mat4.scale(1, 2, 1))
