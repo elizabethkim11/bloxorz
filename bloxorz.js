@@ -33,16 +33,43 @@ export class Bloxorz_Base extends Scene {
         this.key_triggered_button("Move block up", ['i'], function () {
             this.curr = "up";
             this.current = this.prev;
+            if (this.prev_pos == "upright_init") {
+                this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                this.prev_pos = "lying_init";
+            } else {
+                this.prev_pos = "upright_init";
+            }
             this.count += 1;
         });
         this.key_triggered_button("Move block left", ['j'], function () {
             this.curr = "left";
             this.current = this.prev;
+            if (this.prev_pos == "upright_init") {
+                this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                this.prev_pos = "lying_init";
+            } else {
+                this.prev_pos = "upright_init";
+            }
             this.count += 1;
         });
         this.key_triggered_button("Move block down", ['k'], function () {
             this.curr = "down";
             this.current = this.prev;
+            if (this.prev_pos == "upright_init") {
+                this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                this.prev_pos = "lying_init";
+            } else {
+                this.prev_pos = "upright_init";
+            }
             this.count += 1;
         });
         this.key_triggered_button("Move block right", ['l'], function () {
@@ -105,8 +132,22 @@ export class Bloxorz extends Bloxorz_Base {
         const angle = Math.PI/2;
         if (this.curr == "left") {
             console.log("LEFT");
-            model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
-            model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
+            console.log(this.prev_pos);
+            if (this.prev_pos == "upright_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
+                // this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
+                // this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
+                // this.prev_pos = "lying_aft";
+            } else {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
+                // this.prev_pos = "upright_init";
+            }
+            // model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
+            // model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
             console.log(model_transform);
         }
@@ -118,13 +159,12 @@ export class Bloxorz extends Bloxorz_Base {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
                 // this.prev_pos = "lying_init";
             } else if (this.prev_pos == "lying_init") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, -1)).times((Mat4.translation(-1, 1, 0)));
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
                 // this.prev_pos = "upright_aft";
             } else if (this.prev_pos == "upright_aft") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 2, 0)));
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
                 // this.prev_pos = "lying_aft";
             } else {
-                console.log("HELP");
                 model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
                 // this.prev_pos = "upright_init";
             }
@@ -133,15 +173,42 @@ export class Bloxorz extends Bloxorz_Base {
         else if (this.curr == "up") {
             console.log("UP");
             console.log(model_transform);
-            model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
-            model_transform = model_transform.times(Mat4.translation(0, 1, 1));
+            console.log(this.prev_pos);
+            if (this.prev_pos == "upright_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
+                // this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
+                // this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
+                // this.prev_pos = "lying_aft";
+            } else {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
+                // this.prev_pos = "upright_init";
+            }
+            // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
+            // model_transform = model_transform.times(Mat4.translation(0, 1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else if (this.curr == "down") {
             console.log("DOWN");
             console.log(model_transform);
-            model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
-            model_transform = model_transform.times(Mat4.translation(0, -1, 1));
+            if (this.prev_pos == "upright_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
+                // this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "lying_init") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
+                // this.prev_pos = "upright_aft";
+            } else if (this.prev_pos == "upright_aft") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
+                // this.prev_pos = "lying_aft";
+            } else {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
+                // this.prev_pos = "upright_init";
+            }
+            // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
+            // model_transform = model_transform.times(Mat4.translation(0, -1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else {
