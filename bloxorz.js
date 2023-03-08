@@ -3,7 +3,7 @@ import {Tile} from './tile.js';
 
 // Pull these names into this module's scope for convenience:
 const {vec3, vec4, color, hex_color, Mat4, Light, Shape, Material, Shader, Texture, Scene} = tiny;
-const {Triangle, Square, Tetrahedron, Windmill, Cube, Subdivision_Sphere, Block} = defs;
+const {Triangle, Square, Tetrahedron, Windmill, Cube, Subdivision_Sphere, Block, Tiles} = defs;
 
 export class Bloxorz_Base extends Scene {
     curr;
@@ -12,33 +12,50 @@ export class Bloxorz_Base extends Scene {
         super();
         this.shapes = {
             'block': new Block(),
+            'tile': new Tiles(),
         }
         const phong = new defs.Phong_Shader();
         this.materials = {
             metal: new Material(phong,
-                {ambient: .2, diffusivity: .8, specularity: .8, color: color(.9, .5, .9, 1)})
+                {ambient: .2, diffusivity: .8, specularity: .8, color: color(.9, .5, .9, 1)}),
+            silver: new Material(phong,
+                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("c0c0c0")}),
+            goal: new Material(phong,
+                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")})
         }
         this.curr = "none";
         this.prev = Mat4.identity();
         this.current = Mat4.identity();
+        this.count = 0;
     }
     make_control_panel() {
         this.key_triggered_button("Move block up", ['i'], function () {
             this.curr = "up";
             this.current = this.prev;
+            this.count += 1;
         });
         this.key_triggered_button("Move block left", ['j'], function () {
             this.curr = "left";
             this.current = this.prev;
+            this.count += 1;
         });
         this.key_triggered_button("Move block down", ['k'], function () {
             this.curr = "down";
             this.current = this.prev;
+            this.count += 1;
         });
         this.key_triggered_button("Move block right", ['l'], function () {
             this.curr = "right";
             this.current = this.prev;
+            this.count += 1;
         });
+        this.new_line();
+        this.new_line();
+        this.control_panel.innerHTML += "Count: ";
+        this.live_string(box => {
+            box.textContent = this.count + " moves"
+        });
+
     }
     display(context, program_state) {
         if (!context.scratchpad.controls) {
@@ -116,5 +133,77 @@ export class Bloxorz extends Bloxorz_Base {
         let model_transform = this.current;
         model_transform = this.draw_block(context, program_state, model_transform, brown);
         this.prev = model_transform;
+
+        // TILES PLATFORM
+        const blue = hex_color("#1a9ffa"), yellow = hex_color("#fdc03a")
+        // Variable model_transform will be a local matrix value that helps us position shapes.
+        // It starts over as the identity every single frame - coordinate axes at the origin.
+        let tiles_transform = Mat4.identity();
+        tiles_transform = tiles_transform.times(Mat4.translation(-15, -2, -2));
+        let maxx = 3, maxz = 3;
+        // for (let i = 0; i < maxz; i++) {
+        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
+        //     for (let j = 0; j < maxx; j++) {
+        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
+        //     }
+        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
+        //
+        // }
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 3, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 6; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 6, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 8, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 5, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 5; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i == 2) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
+            } else {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+
+
+        // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
+        // Draw a tile:
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        // Tweak our coordinate system downward 2 units for the next shape.
+        tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+
+
+        const t = this.t = program_state.animation_time / 1000;
+
+
+        tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
+            .times(Mat4.scale(1, 2, 1))
+            .times(Mat4.translation(0, -1.5, 0));
     }
 }
