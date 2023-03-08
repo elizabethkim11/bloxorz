@@ -27,11 +27,6 @@ export class Bloxorz_Base extends Scene {
         this.prev = Mat4.identity();
         this.current = Mat4.identity();
         this.count = 0;
-        this.up = true;
-        this.downF = false;
-        this.downS = false;
-        this.prev_action = "none";
-        this.curr_action = "none";
     }
     make_control_panel() {
         this.key_triggered_button("Move block up", ['i'], function () {
@@ -98,15 +93,11 @@ export class Bloxorz_Base extends Scene {
 export class Bloxorz extends Bloxorz_Base {
     draw_block(context, program_state, model_transform, color) {
         const angle = Math.PI/2;
-        if (this.curr == "left" && this.up) {
+        if (this.curr == "left") {
             console.log("LEFT");
             model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
             model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            console.log(model_transform);
-        }
-        if (this.curr == "left" && this.downS) {
-
         }
         else if (this.curr == "right") {
             console.log("RIGHT");
@@ -114,9 +105,6 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
             model_transform = model_transform.times(Mat4.translation(-1, 1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            this.up = false;
-            this.downS = true;
-            this.prev = "right";
         }
         else if (this.curr == "up") {
             console.log("UP");
@@ -124,9 +112,6 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
             model_transform = model_transform.times(Mat4.translation(0, 1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            this.up = false;
-            this.downF = true;
-            this.prev = "up";
         }
         else if (this.curr == "down") {
             console.log("DOWN");
@@ -134,9 +119,6 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
             model_transform = model_transform.times(Mat4.translation(0, -1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            this.up = false;
-            this.downF = true;
-            this.prev = "down";
         }
 
         else if (this.curr == "left") {
@@ -144,23 +126,15 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
             model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            console.log(model_transform);
-            this.downS= false;
-            this.up = true;
-            this.prev = "left";
         }
         else if (this.curr == "left") {
             console.log("LEFT");
             model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0));
             model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
-            console.log(model_transform);
-            this.up = false;
-            this.downS = true;
-            this.prev = "left";
         }
         else {
-                this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
+            this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         return model_transform;
     }
