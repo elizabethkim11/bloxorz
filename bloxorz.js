@@ -126,19 +126,7 @@ export class Bloxorz extends Bloxorz_Base {
         }
         return model_transform;
     }
-    display(context, program_state) {
-        super.display(context, program_state);
-        const brown = hex_color("#7B3F00")
-        console.log(this.prev);
-        let model_transform = this.current;
-        model_transform = this.draw_block(context, program_state, model_transform, brown);
-        this.prev = model_transform;
-
-        // TILES PLATFORM
-        const blue = hex_color("#1a9ffa"), yellow = hex_color("#fdc03a")
-        // Variable model_transform will be a local matrix value that helps us position shapes.
-        // It starts over as the identity every single frame - coordinate axes at the origin.
-        let tiles_transform = Mat4.identity();
+    draw_tile_platform1(context, program_state, tiles_transform) {
         tiles_transform = tiles_transform.times(Mat4.translation(-15, -2, -2));
         let maxx = 3, maxz = 3;
         // for (let i = 0; i < maxz; i++) {
@@ -189,8 +177,6 @@ export class Bloxorz extends Bloxorz_Base {
             tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
         }
-
-
         // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
         // Draw a tile:
         // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
@@ -198,12 +184,25 @@ export class Bloxorz extends Bloxorz_Base {
         tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
         // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
 
-
         const t = this.t = program_state.animation_time / 1000;
-
 
         tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
             .times(Mat4.scale(1, 2, 1))
             .times(Mat4.translation(0, -1.5, 0));
+        return tiles_transform;
+
+    }
+    display(context, program_state) {
+        super.display(context, program_state);
+        const brown = hex_color("#7B3F00")
+        console.log(this.prev);
+        let model_transform = this.current;
+        model_transform = this.draw_block(context, program_state, model_transform, brown);
+        this.prev = model_transform;
+
+        // TILES PLATFORM
+        let tiles_transform = Mat4.identity();
+        tiles_transform = this.draw_tile_platform1(context, program_state, tiles_transform);
+
     }
 }
