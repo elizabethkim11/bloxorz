@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="661dbb93-5d73-4229-9c6a-0354fa64392f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bloxorz.js" beforeDir="false" afterPath="$PROJECT_DIR$/bloxorz.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,7 +45,7 @@
       <updated>1677796828863</updated>
       <workItem from="1677796829935" duration="11697000" />
       <workItem from="1678061095651" duration="727000" />
-      <workItem from="1678248522197" duration="6200000" />
+      <workItem from="1678248522197" duration="6827000" />
     </task>
     <servers />
   </component>

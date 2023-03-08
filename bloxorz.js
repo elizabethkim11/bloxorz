@@ -125,7 +125,7 @@ export class Bloxorz extends Bloxorz_Base {
                 // this.prev_pos = "lying_aft";
             } else {
                 console.log("HELP");
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 0, 0)));
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
                 // this.prev_pos = "upright_init";
             }
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
