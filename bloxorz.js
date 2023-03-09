@@ -24,7 +24,7 @@ export class Bloxorz_Base extends Scene {
                 {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")})
         }
         this.curr = "none";
-        this.prev_pos = "lying";
+        this.curr_pos = "sideways";
         this.prev = Mat4.identity();
         this.current = Mat4.identity();
         this.count = 0;
@@ -34,10 +34,12 @@ export class Bloxorz_Base extends Scene {
         this.key_triggered_button("Move block up", ['i'], function () {
             this.curr = "up";
             this.current = this.prev;
-            if (this.prev_pos == "upright") {
-                this.prev_pos = "lying";
+            if (this.curr_pos == "upright") {
+                this.curr_pos = "sideways";
+            } else if (this.curr_pos == "sideways") {
+                this.curr_pos = "upright";
             } else {
-                this.prev_pos = "upright";
+                this.curr_pos = "lying";
             }
             this.count += 1;
             this.prev_move = "up";
@@ -45,18 +47,12 @@ export class Bloxorz_Base extends Scene {
         this.key_triggered_button("Move block left", ['j'], function () {
             this.curr = "left";
             this.current = this.prev;
-            if (this.prev_pos == "upright" && !(this.prev_move == "up" || this.prev_move == "down")) {
-                this.prev_pos = "lying";
-            } else if (this.prev_pos == "upright" && (this.prev_move == "up" || this.prev_move == "down")) {
-                this.prev_pos = "sideways_second";
-            } else if (this.prev_pos == "lying") {
-                this.prev_pos = "upright";
-            } else if (this.prev_pos == "upright" && !(this.prev_move == "up" || this.prev_move == "down")) {
-                this.prev_pos = "lying";
-            } else if (this.prev_pos == "upright" && (this.prev_move == "up" || this.prev_move == "down")) {
-                this.prev_pos = "sideways_second";
+            if (this.curr_pos == "upright") {
+                this.curr_pos = "lying";
+            } else if (this.curr_pos == "lying") {
+                this.curr_pos = "upright";
             } else {
-                this.prev_pos = "upright";
+                this.curr_pos = "sideways";
             }
             this.count += 1;
             this.prev_move = "left";
@@ -64,10 +60,12 @@ export class Bloxorz_Base extends Scene {
         this.key_triggered_button("Move block down", ['k'], function () {
             this.curr = "down";
             this.current = this.prev;
-            if (this.prev_pos == "upright") {
-                this.prev_pos = "lying";
+            if (this.curr_pos == "upright") {
+                this.curr_pos = "sideways";
+            } else if (this.curr_pos == "sideways") {
+                this.curr_pos = "upright";
             } else {
-                this.prev_pos = "upright";
+                this.curr_pos = "lying";
             }
             this.count += 1;
             this.prev_move = "down";
@@ -75,10 +73,12 @@ export class Bloxorz_Base extends Scene {
         this.key_triggered_button("Move block right", ['l'], function () {
             this.curr = "right";
             this.current = this.prev;
-            if (this.prev_pos == "upright" && !(this.prev_move == "up" || this.prev_move == "down")) {
-                this.prev_pos = "lying";
+            if (this.curr_pos == "upright") {
+                this.curr_pos = "lying";
+            } else if (this.curr_pos == "lying") {
+                this.curr_pos = "upright";
             } else {
-                this.prev_pos = "upright";
+                this.curr_pos = "sideways";
             }
             this.count += 1;
             this.prev_move = "right";
@@ -129,25 +129,16 @@ export class Bloxorz extends Bloxorz_Base {
         const angle = Math.PI/2;
         if (this.curr == "left") {
             console.log("LEFT");
-            console.log(this.prev_pos);
-            if (this.prev_pos == "upright") {
+            console.log(this.curr_pos);
+            if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_second") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, 2)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_third") {
-                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(2, 0, 0)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_fourth") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, 2)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_first") {
-                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(2, 0, 0)));
-                // this.prev_pos = "lying";
+                // this.curr_pos = "lying";
+            } else if (this.curr_pos == "sideways") {
+                model_transform = model_transform.times(Mat4.translation(-2, 0, 0));
+                // this.curr_pos = "lying";
             } else {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(1, 1, 0)));
-                // this.prev_pos = "upright";
+                // this.curr_pos = "upright";
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
             // model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
@@ -157,40 +148,33 @@ export class Bloxorz extends Bloxorz_Base {
         else if (this.curr == "right") {
             console.log("RIGHT");
             console.log(model_transform);
-            console.log(this.prev_pos);
-            if (this.prev_pos == "upright") {
+            console.log(this.curr_pos);
+            if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
                 // model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_second") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, -2)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_third") {
-                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(-2, 0, 0)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_fourth") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, -2)));
-                // this.prev_pos = "lying";
-            } else if (this.prev_pos == "sideways_first") {
-                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(-2, 0, 0)));
-                // this.prev_pos = "lying";
+                // this.curr_pos = "lying";
+            } else if (this.curr_pos == "sideways") {
+                model_transform = model_transform.times(Mat4.translation(2, 0, 0));// this.curr_pos = "lying";
             } else {
                 //.times((Mat4.translation(-1, 1, 0))
+                console.log("HELLo");
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
-                // this.prev_pos = "upright";
+                // this.curr_pos = "upright";
             }
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else if (this.curr == "up") {
             console.log("UP");
             console.log(model_transform);
-            console.log(this.prev_pos);
-            if (this.prev_pos == "upright") {
+            console.log(this.curr_pos);
+            if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
-                // this.prev_pos = "lying";
-            } else {
+                // this.curr_pos = "lying";
+            } else if (this.curr_pos == "sideways") {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
-                // this.prev_pos = "upright";
+                // this.curr_pos = "upright";
+            } else {
+                model_transform = model_transform.times(Mat4.translation(0, 0, 2));
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
             // model_transform = model_transform.times(Mat4.translation(0, 1, 1));
@@ -199,12 +183,14 @@ export class Bloxorz extends Bloxorz_Base {
         else if (this.curr == "down") {
             console.log("DOWN");
             console.log(model_transform);
-            if (this.prev_pos == "upright") {
+            if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
-                // this.prev_pos = "lying";
-            } else {
+                // this.curr_pos = "lying";
+            } else if (this.curr_pos == "sideways") {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 1, 0, 0)).times((Mat4.translation(0, 1, -1)));
-                // this.prev_pos = "upright";
+                // this.curr_pos = "upright";
+            } else {
+                model_transform = model_transform.times(Mat4.translation(0, 0, -2));
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
             // model_transform = model_transform.times(Mat4.translation(0, -1, 1));
