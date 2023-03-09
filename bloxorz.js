@@ -28,6 +28,7 @@ export class Bloxorz_Base extends Scene {
         this.prev = Mat4.identity();
         this.current = Mat4.identity();
         this.count = 0;
+        this.prev_move = "none";
     }
     make_control_panel() {
         this.key_triggered_button("Move block up", ['i'], function () {
@@ -43,20 +44,34 @@ export class Bloxorz_Base extends Scene {
                 this.prev_pos = "upright_init";
             }
             this.count += 1;
+            this.prev_move = "up";
         });
         this.key_triggered_button("Move block left", ['j'], function () {
             this.curr = "left";
             this.current = this.prev;
-            if (this.prev_pos == "upright_init") {
+            if (this.prev_pos == "upright_init" && !(this.prev_move == "up" || this.prev_move == "down")) {
                 this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "upright_init" && (this.prev_move == "up" || this.prev_move == "down")) {
+                this.prev_pos = "sideways_second";
             } else if (this.prev_pos == "lying_init") {
                 this.prev_pos = "upright_aft";
-            } else if (this.prev_pos == "upright_aft") {
+            } else if (this.prev_pos == "upright_aft" && !(this.prev_move == "up" || this.prev_move == "down")) {
                 this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "upright_aft" && (this.prev_move == "up" || this.prev_move == "down")) {
+                this.prev_pos = "sideways_second";
+            } else if (this.prev_pos == "sideways_first") {
+                this.prev_pos = "sideways_second";
+            } else if (this.prev_pos == "sideways_second") {
+                this.prev_pos = "sideways_third";
+            } else if (this.prev_pos == "sideways_third") {
+                this.prev_pos = "sideways_fourth";
+            } else if (this.prev_pos == "sideways_fourth") {
+                this.prev_pos = "sideways_first";
             } else {
                 this.prev_pos = "upright_init";
             }
             this.count += 1;
+            this.prev_move = "left";
         });
         this.key_triggered_button("Move block down", ['k'], function () {
             this.curr = "down";
@@ -71,20 +86,34 @@ export class Bloxorz_Base extends Scene {
                 this.prev_pos = "upright_init";
             }
             this.count += 1;
+            this.prev_move = "down";
         });
         this.key_triggered_button("Move block right", ['l'], function () {
             this.curr = "right";
             this.current = this.prev;
-            if (this.prev_pos == "upright_init") {
+            if (this.prev_pos == "upright_init" && !(this.prev_move == "up" || this.prev_move == "down")) {
                 this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "upright_init" && (this.prev_move == "up" || this.prev_move == "down")) {
+                this.prev_pos = "sideways_second";
             } else if (this.prev_pos == "lying_init") {
                 this.prev_pos = "upright_aft";
-            } else if (this.prev_pos == "upright_aft") {
-                this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "upright_aft" && !(this.prev_move == "up" || this.prev_move == "down")) {
+                this.prev_pos = "lying_init";
+            } else if (this.prev_pos == "upright_aft" && (this.prev_move == "up" || this.prev_move == "down")) {
+                this.prev_pos = "sideways_second";
+            } else if (this.prev_pos == "sideways_first") {
+                this.prev_pos = "sideways_second";
+            } else if (this.prev_pos == "sideways_second") {
+                this.prev_pos = "sideways_third";
+            } else if (this.prev_pos == "sideways_third") {
+                this.prev_pos = "sideways_fourth";
+            } else if (this.prev_pos == "sideways_fourth") {
+                this.prev_pos = "sideways_first";
             } else {
                 this.prev_pos = "upright_init";
             }
             this.count += 1;
+            this.prev_move = "right";
         });
         this.new_line();
         this.new_line();
@@ -142,6 +171,18 @@ export class Bloxorz extends Bloxorz_Base {
             } else if (this.prev_pos == "upright_aft") {
                 model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
                 // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_second") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, 2)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_third") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(2, 0, 0)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_fourth") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, 2)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_first") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(2, 0, 0)));
+                // this.prev_pos = "lying_aft";
             } else {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
                 // this.prev_pos = "upright_init";
@@ -163,6 +204,18 @@ export class Bloxorz extends Bloxorz_Base {
                 // this.prev_pos = "upright_aft";
             } else if (this.prev_pos == "upright_aft") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_second") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, -2)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_third") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(-2, 0, 0)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_fourth") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, -2)));
+                // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "sideways_first") {
+                model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(-2, 0, 0)));
                 // this.prev_pos = "lying_aft";
             } else {
                 model_transform = model_transform.times(Mat4.rotation(-angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
@@ -216,8 +269,9 @@ export class Bloxorz extends Bloxorz_Base {
         }
         return model_transform;
     }
+<<<<<<<<< Temporary merge branch 1
     draw_tile_platform1(context, program_state, tiles_transform) {
-        tiles_transform = tiles_transform.times(Mat4.translation(-15, -2, -2));
+        tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
         // for (let i = 0; i < maxz; i++) {
         //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
