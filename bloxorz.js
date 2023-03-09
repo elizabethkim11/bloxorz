@@ -269,7 +269,6 @@ export class Bloxorz extends Bloxorz_Base {
         }
         return model_transform;
     }
-<<<<<<<<< Temporary merge branch 1
     draw_tile_platform1(context, program_state, tiles_transform) {
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
@@ -343,7 +342,6 @@ export class Bloxorz extends Bloxorz_Base {
     display(context, program_state) {
         super.display(context, program_state);
         const brown = hex_color("#7B3F00")
-        console.log(this.prev);
         let model_transform = this.current;
         model_transform = this.draw_block(context, program_state, model_transform, brown);
         this.prev = model_transform;
