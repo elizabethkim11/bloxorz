@@ -36,10 +36,6 @@ export class Bloxorz_Base extends Scene {
             this.current = this.prev;
             if (this.prev_pos == "upright") {
                 this.prev_pos = "lying";
-            } else if (this.prev_pos == "lying") {
-                this.prev_pos = "upright";
-            } else if (this.prev_pos == "upright") {
-                this.prev_pos = "lying";
             } else {
                 this.prev_pos = "upright";
             }
@@ -77,10 +73,6 @@ export class Bloxorz_Base extends Scene {
             this.curr = "down";
             this.current = this.prev;
             if (this.prev_pos == "upright") {
-                this.prev_pos = "lying";
-            } else if (this.prev_pos == "lying") {
-                this.prev_pos = "upright";
-            } else if (this.prev_pos == "upright") {
                 this.prev_pos = "lying";
             } else {
                 this.prev_pos = "upright";
@@ -214,14 +206,8 @@ export class Bloxorz extends Bloxorz_Base {
             if (this.prev_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
                 // this.prev_pos = "lying";
-            } else if (this.prev_pos == "lying") {
-                model_transform = model_transform.times(Mat4.rotation(-angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
-                // this.prev_pos = "upright";
-            } else if (this.prev_pos == "upright") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
-                // this.prev_pos = "lying";
             } else {
-                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
+                model_transform = model_transform.times(Mat4.rotation(angle*3, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
                 // this.prev_pos = "upright";
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
@@ -234,14 +220,8 @@ export class Bloxorz extends Bloxorz_Base {
             if (this.prev_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
                 // this.prev_pos = "lying";
-            } else if (this.prev_pos == "lying") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
-                // this.prev_pos = "upright";
-            } else if (this.prev_pos == "upright") {
-                model_transform = model_transform.times(Mat4.rotation(-angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
-                // this.prev_pos = "lying";
             } else {
-                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
+                model_transform = model_transform.times(Mat4.rotation(angle*3, 1, 0, 0)).times((Mat4.translation(0, 1, -1)));
                 // this.prev_pos = "upright";
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
