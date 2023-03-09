@@ -59,14 +59,6 @@ export class Bloxorz_Base extends Scene {
                 this.prev_pos = "lying";
             } else if (this.prev_pos == "upright" && (this.prev_move == "up" || this.prev_move == "down")) {
                 this.prev_pos = "sideways_second";
-            } else if (this.prev_pos == "sideways_first") {
-                this.prev_pos = "sideways_second";
-            } else if (this.prev_pos == "sideways_second") {
-                this.prev_pos = "sideways_third";
-            } else if (this.prev_pos == "sideways_third") {
-                this.prev_pos = "sideways_fourth";
-            } else if (this.prev_pos == "sideways_fourth") {
-                this.prev_pos = "sideways_first";
             } else {
                 this.prev_pos = "upright";
             }
@@ -93,16 +85,6 @@ export class Bloxorz_Base extends Scene {
             this.current = this.prev;
             if (this.prev_pos == "upright" && !(this.prev_move == "up" || this.prev_move == "down")) {
                 this.prev_pos = "lying";
-            } else if (this.prev_pos == "upright" && (this.prev_move == "up" || this.prev_move == "down")) {
-                this.prev_pos = "sideways_second";
-            } else if (this.prev_pos == "sideways_first") {
-                this.prev_pos = "sideways_second";
-            } else if (this.prev_pos == "sideways_second") {
-                this.prev_pos = "sideways_third";
-            } else if (this.prev_pos == "sideways_third") {
-                this.prev_pos = "sideways_fourth";
-            } else if (this.prev_pos == "sideways_fourth") {
-                this.prev_pos = "sideways_first";
             } else {
                 this.prev_pos = "upright";
             }
@@ -172,7 +154,7 @@ export class Bloxorz extends Bloxorz_Base {
                 model_transform = model_transform.times(Mat4.rotation(-angle, 0, 1, 0)).times((Mat4.translation(2, 0, 0)));
                 // this.prev_pos = "lying";
             } else {
-                model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
+                model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(1, 1, 0)));
                 // this.prev_pos = "upright";
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
