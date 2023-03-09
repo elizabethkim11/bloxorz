@@ -82,7 +82,17 @@ export class Bloxorz_Base extends Scene {
                 this.prev_pos = "upright_aft";
             } else if (this.prev_pos == "upright_aft") {
                 this.prev_pos = "lying_init";
-            } else {
+            } else if (this.prev_pos == "sideways_first") {
+                this.prev_pos = "";
+            } else if (this.prev_pos == "sideways_second") {
+                this.prev_pos = "upright_second";
+            } else if (this.prev_pos == "sideways_third") {
+                this.prev_pos = "upright_third";
+            } else if (this.prev_pos == "sideways_fourth") {
+                this.prev_pos = "";
+            }
+            else
+             {
                 this.prev_pos = "upright_init";
             }
             this.count += 1;
@@ -236,7 +246,9 @@ export class Bloxorz extends Bloxorz_Base {
             } else if (this.prev_pos == "upright_aft") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
                 // this.prev_pos = "lying_aft";
-            } else {
+            }
+            else
+            {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
                 // this.prev_pos = "upright_init";
             }
@@ -247,6 +259,7 @@ export class Bloxorz extends Bloxorz_Base {
         else if (this.curr == "down") {
             console.log("DOWN");
             console.log(model_transform);
+            console.log(this.prev_pos);
             if (this.prev_pos == "upright_init") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
                 // this.prev_pos = "lying_init";
@@ -256,8 +269,14 @@ export class Bloxorz extends Bloxorz_Base {
             } else if (this.prev_pos == "upright_aft") {
                 model_transform = model_transform.times(Mat4.rotation(-angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
                 // this.prev_pos = "lying_aft";
+            } else if (this.prev_pos == "upright_second") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-3, -1, 0)));
+            } else if (this.prev_pos == "upright_third") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 3)));
+            } else if (this.prev_pos == "upright_fourth") {
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, -1, 3)));
             } else {
-                model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, -1, 1)));
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(0, 0, 0)));
                 // this.prev_pos = "upright_init";
             }
             // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
