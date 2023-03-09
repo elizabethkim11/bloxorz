@@ -157,7 +157,7 @@ export class Bloxorz extends Bloxorz_Base {
             console.log("LEFT");
             console.log(this.prev_pos);
             if (this.prev_pos == "upright") {
-                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(1, 1, 0)));
+                model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, -1, 0)));
                 // this.prev_pos = "lying";
             } else if (this.prev_pos == "sideways_second") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 1, 0)).times((Mat4.translation(0, 0, 2)));
