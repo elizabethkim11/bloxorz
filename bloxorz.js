@@ -90,7 +90,6 @@ export class Bloxorz_Base extends Scene {
                 this.prev_pos = "sideways";
             }
             this.count += 1;
-            this.prev_move = "right";
         });
         this.new_line();
         this.new_line();
@@ -104,11 +103,6 @@ export class Bloxorz_Base extends Scene {
         if (!context.scratchpad.controls) {
             this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
 
-            // Define the global camera and projection matrices, which are stored in program_state.  The camera
-            // matrix follows the usual format for transforms, but with opposite values (cameras exist as
-            // inverted matrices).  The projection matrix follows an unusual format and determines how depth is
-            // treated when projecting 3D points onto a plane.  The Mat4 functions perspective() and
-            // orthographic() automatically generate valid matrices for one.  The input arguments of
             // Set camera position and target position
             const camera_position = vec3(10, 10, -15);
             const target_position = vec3(0, 0, 0);
@@ -127,7 +121,6 @@ export class Bloxorz_Base extends Scene {
         // *** Lights: *** Values of vector or point lights.  They'll be consulted by
         // the shader when coloring shapes.  See Light's class definition for inputs.
         const t = this.t = program_state.animation_time / 1000;
-        //const angle = Math.sin(t);
         const light_position = vec4(1,1,1,0);
         program_state.lights = [new Light(light_position, color(1, 1, 1, 1), 1000)];
     }
@@ -141,16 +134,11 @@ export class Bloxorz extends Bloxorz_Base {
             console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(1, 1, 0)));
-                // this.curr_pos = "lying";
             } else if (this.curr_pos == "sideways") {
                 model_transform = model_transform.times(Mat4.translation(2, 0, 0));
-                // this.curr_pos = "lying";
             } else {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(1, 1, 0)));
-                // this.curr_pos = "upright";
             }
-            // model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1));
-            // model_transform = model_transform.times(Mat4.translation(-1, -1, 0));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
             console.log(model_transform);
         }
@@ -160,14 +148,10 @@ export class Bloxorz extends Bloxorz_Base {
             console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
-                // model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-1, 1, 0)));
-                // this.curr_pos = "lying";
             } else if (this.curr_pos == "sideways") {
-                model_transform = model_transform.times(Mat4.translation(-2, 0, 0));// this.curr_pos = "lying";
+                model_transform = model_transform.times(Mat4.translation(-2, 0, 0));
             } else {
-                //.times((Mat4.translation(-1, 1, 0))
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(1, -1, 0)));
-                // this.curr_pos = "upright";
             }
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
@@ -177,15 +161,11 @@ export class Bloxorz extends Bloxorz_Base {
             console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 1)));
-                // this.curr_pos = "lying";
             } else if (this.curr_pos == "sideways") {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 1, 0, 0)).times((Mat4.translation(0, -1, -1)));
-                // this.curr_pos = "upright";
             } else {
                 model_transform = model_transform.times(Mat4.translation(0, 0, 2));
             }
-            // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
-            // model_transform = model_transform.times(Mat4.translation(0, 1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else if (this.curr == "down") {
@@ -194,15 +174,11 @@ export class Bloxorz extends Bloxorz_Base {
             console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, -1)));
-                // this.curr_pos = "lying";
             } else if (this.curr_pos == "sideways") {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 1, 0, 0)).times((Mat4.translation(0, 1, -1)));
-                // this.curr_pos = "upright";
             } else {
                 model_transform = model_transform.times(Mat4.translation(0, 0, -2));
             }
-            // model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0));
-            // model_transform = model_transform.times(Mat4.translation(0, -1, 1));
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal.override({color: color}));
         }
         else {
