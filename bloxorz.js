@@ -17,8 +17,8 @@ export class Bloxorz_Base extends Scene {
         const phong = new defs.Phong_Shader();
         const textured = new defs.Textured_Phong(1);
         this.materials = {
-            //metal: new Material(textured, {
-              //  ambient: .9, diffusivity: .8, specularity: .8, texture: new Texture('assets/brick.png')}),
+           // metal: new Material(textured, {
+            //   ambient: .9, diffusivity: .8, specularity: .8, texture: new Texture('assets/brick.png')}),
             metal: new Material(phong,
                 {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("7B3F00")}),
             silver: new Material(phong,
