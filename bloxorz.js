@@ -32,6 +32,8 @@ export class Bloxorz_Base extends Scene {
         this.current = Mat4.identity();
         this.count = 0;
         this.prev_pos = "upright";
+        this.cube_position = vec3(0, 0, 0);
+        this.goal_position = vec3(0, 0, 0);
     }
     make_control_panel() {
         this.key_triggered_button("Move block up", ['i'], function () {
@@ -266,6 +268,32 @@ export class Bloxorz extends Bloxorz_Base {
         let model_transform = this.current;
         model_transform = this.draw_block(context, program_state, model_transform, brown);
         this.prev = model_transform;
+        if (this.curr == "up" && this.curr_pos == "upright") {
+            this.cube_position[1] += 2;
+        } else if (this.curr == "down" && this.curr_pos == "upright") {
+            this.cube_position[1] -= 2;
+        } else if (this.curr == "up" && this.curr_pos == "sideways") {
+            this.cube_position[1] += 2;
+        } else if (this.curr == "down" && this.curr_pos == "sideways") {
+            this.cube_position[1] -= 2;
+        } else if (this.curr == "up" && this.curr_pos == "lying") {
+            this.cube_position[1] += 1;
+        } else if (this.curr == "down" && this.curr_pos == "lying") {
+            this.cube_position[1] -= 1;
+        } else if (this.curr == "right" && this.curr_pos == "sideways") {
+            this.cube_position[0] += 1;
+        } else if (this.curr == "left" && this.curr_pos == "sideways") {
+            this.cube_position[0] -= 1;
+        } else if (this.curr == "right" && this.curr_pos == "upright") {
+            this.cube_position[0] += 2;
+        } else if (this.curr == "left" && this.curr_pos == "upright") {
+            this.cube_position[0] -= 2;
+        } else if (this.curr == "right" && this.curr_pos == "lying") {
+            this.cube_position[0] += 1;
+        } else if (this.curr == "left" && this.curr_pos == "lying") {
+            this.cube_position[0] -= 1;
+        }
+        console.log(this.cube_position);
 
         // TILES PLATFORM
         let tiles_transform = Mat4.identity();
