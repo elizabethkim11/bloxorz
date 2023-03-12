@@ -613,7 +613,7 @@ export class Bloxorz extends Bloxorz_Base {
 
         let level_transform = Mat4.identity();
         let S1 = Mat4.scale(2, 2, 0);
-        let T1 = Mat4.translation(5, 5, 0);
+        let T1 = Mat4.translation(8, 7, 0);
         level_transform = level_transform.times(T1).times(S1);
 
         this.select_tile(context, program_state, tiles_transform, this.i);
