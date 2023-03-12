@@ -13,18 +13,45 @@ export class Bloxorz_Base extends Scene {
         this.shapes = {
             'block': new Block(),
             'tile': new Tiles(),
+            'square': new Square()
         }
         const phong = new defs.Phong_Shader();
         const textured = new defs.Textured_Phong(1);
         this.materials = {
-            //metal: new Material(textured, {
-              //  ambient: .9, diffusivity: .8, specularity: .8, texture: new Texture('assets/brick.png')}),
+           // metal: new Material(textured, {
+            //   ambient: .9, diffusivity: .8, specularity: .8, texture: new Texture('assets/brick.png')}),
             metal: new Material(phong,
                 {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("7B3F00")}),
             silver: new Material(phong,
                 {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("c0c0c0")}),
             goal: new Material(phong,
-                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")})
+                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")}),
+            level1: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level1.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level2: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level2.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level3: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level3.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level4: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level4.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level5: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level5.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+
         }
         this.curr = "none";
         this.curr_pos = "upright";
@@ -32,6 +59,9 @@ export class Bloxorz_Base extends Scene {
         this.current = Mat4.identity();
         this.count = 0;
         this.prev_pos = "upright";
+        this.cube_1_position = vec3(0, 0,0);
+        this.cube_2_position= vec3(0,0,0);
+        this.goal_position = vec3(-2, 3, 0);
     }
     make_control_panel() {
         this.key_triggered_button("Start game from beginning", ['Enter'], function () {
@@ -42,12 +72,24 @@ export class Bloxorz_Base extends Scene {
             if (this.prev_pos == "upright") {
                 this.curr_pos = "sideways";
                 this.prev_pos = "sideways";
+                this.cube_1_position[1] += 2;
+                this.cube_2_position[1] += 1;
             } else if (this.prev_pos == "sideways") {
                 this.curr_pos = "upright";
                 this.prev_pos = "upright";
+                if (this.cube_1_position[1] > this.cube_2_position[1]) {
+                    this.cube_1_position[1] += 1;
+                    this.cube_2_position[1] += 2;
+                }
+                else {
+                    this.cube_2_position[1] += 1;
+                    this.cube_1_position[1] += 2;
+                }
             } else {
                 this.curr_pos = "lying";
                 this.prev_pos = "lying";
+                this.cube_1_position[1] += 1;
+                this.cube_2_position[1] += 1;
             }
             this.count += 1;
         });
@@ -57,12 +99,25 @@ export class Bloxorz_Base extends Scene {
             if (this.prev_pos == "upright") {
                 this.curr_pos = "lying";
                 this.prev_pos = "lying";
+                this.cube_1_position[0] -= 2;
+                this.cube_2_position[0] -= 1;
+
             } else if (this.prev_pos == "lying") {
                 this.curr_pos = "upright";
                 this.prev_pos = "upright";
+                if (this.cube_1_position[0] < this.cube_2_position[0]) {
+                    this.cube_1_position[0] -= 1;
+                    this.cube_2_position[0] -= 2;
+                }
+                else {
+                    this.cube_2_position[0] -= 1;
+                    this.cube_1_position[0] -= 2;
+                }
             } else {
                 this.curr_pos = "sideways";
                 this.prev_pos = "sideways";
+                this.cube_1_position[0] -= 1;
+                this.cube_2_position[0] -= 1;
             }
             this.count += 1;
         });
@@ -72,12 +127,25 @@ export class Bloxorz_Base extends Scene {
             if (this.prev_pos == "upright") {
                 this.curr_pos = "sideways";
                 this.prev_pos = "sideways";
+                this.cube_1_position[1] -= 2;
+                this.cube_2_position[1] -= 1;
+
             } else if (this.prev_pos == "sideways") {
                 this.curr_pos = "upright";
                 this.prev_pos = "upright";
+                if (this.cube_1_position[1] < this.cube_2_position[1]) {
+                    this.cube_2_position[1] -= 2;
+                    this.cube_1_position[1] -= 1;
+                }
+                else {
+                    this.cube_1_position[1] -= 2;
+                    this.cube_2_position[1] -= 1;
+                }
             } else {
                 this.curr_pos = "lying";
                 this.prev_pos = "lying";
+                this.cube_1_position[1] -= 1;
+                this.cube_2_position[1] -= 1;
             }
             this.count += 1;
         });
@@ -87,12 +155,24 @@ export class Bloxorz_Base extends Scene {
             if (this.prev_pos == "upright") {
                 this.curr_pos = "lying";
                 this.prev_pos = "lying";
+                this.cube_2_position[0] += 1;
+                this.cube_1_position[0] += 2;
             } else if (this.prev_pos == "lying") {
                 this.curr_pos = "upright";
                 this.prev_pos = "upright";
+                if (this.cube_1_position[0] > this.cube_2_position[0]) {
+                    this.cube_1_position[0] += 1;
+                    this.cube_2_position[0] += 2;
+                }
+                else {
+                    this.cube_2_position[0] += 1;
+                    this.cube_1_position[0] += 2;
+                }
             } else {
                 this.curr_pos = "sideways";
                 this.prev_pos = "sideways";
+                this.cube_1_position[0] += 1;
+                this.cube_2_position[0] += 1;
             }
             this.count += 1;
         });
@@ -132,6 +212,17 @@ export class Bloxorz_Base extends Scene {
 }
 
 export class Bloxorz extends Bloxorz_Base {
+    i = 1;
+    next_stage() {
+        this.curr = "none";
+        this.curr_pos = "upright";
+        this.prev = Mat4.identity();
+        this.current = Mat4.identity();
+        this.count = 0;
+        this.prev_pos = "upright";
+        this.cube_1_position = vec3(0, 0,0);
+        this.cube_2_position= vec3(0,0,0);
+    }
     draw_block(context, program_state, model_transform, color) {
         const angle = Math.PI/2;
         if (this.curr == "left") {
@@ -193,6 +284,7 @@ export class Bloxorz extends Bloxorz_Base {
         return model_transform;
     }
     draw_tile_platform1(context, program_state, tiles_transform) {
+        this.goal_position = vec3(-2, 3, 0);
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
         // for (let i = 0; i < maxz; i++) {
@@ -262,16 +354,271 @@ export class Bloxorz extends Bloxorz_Base {
         return tiles_transform;
 
     }
+    draw_tile_platform2(context, program_state, tiles_transform) {
+        this.goal_position = vec3(-6, 4, 0);
+        tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
+        let maxx = 3, maxz = 3;
+        // for (let i = 0; i < maxz; i++) {
+        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
+        //     for (let j = 0; j < maxx; j++) {
+        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
+        //     }
+        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
+        //
+        // }
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 8, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 5; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 6, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 8, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 6; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 5, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 8; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 6; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            if (i == 5) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
+            } else {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+
+
+        // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
+        // Draw a tile:
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        // Tweak our coordinate system downward 2 units for the next shape.
+        tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+
+
+        const t = this.t = program_state.animation_time / 1000;
+
+
+        tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
+            .times(Mat4.scale(1, 2, 1))
+            .times(Mat4.translation(0, -1.5, 0));
+        return tiles_transform;
+
+    }
+    draw_tile_platform3(context, program_state, tiles_transform) {
+        this.goal_position = vec3(-4,  1, 0);
+        tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
+        let maxx = 3, maxz = 3;
+        // for (let i = 0; i < maxz; i++) {
+        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
+        //     for (let j = 0; j < maxx; j++) {
+        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
+        //     }
+        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
+        //
+        // }
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            if (i != 1) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 6, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(6.0, 0, 2.02));
+        for (let i = 0; i < 7; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            if (i != 4) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 6, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i == 8) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
+            } else if (i != 7 && i != 3) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 8, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i != 5) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 5, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 5; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+
+
+        // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
+        // Draw a tile:
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        // Tweak our coordinate system downward 2 units for the next shape.
+        tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+
+
+        const t = this.t = program_state.animation_time / 1000;
+
+
+        tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
+            .times(Mat4.scale(1, 2, 1))
+            .times(Mat4.translation(0, -1.5, 0));
+        return tiles_transform;
+
+    }
+    draw_tile_platform4(context, program_state, tiles_transform) {
+        this.goal_position = vec3(6, 3, 0);
+        tiles_transform = tiles_transform.times(Mat4.translation(-8, -2, -2));
+        for (let i = 0; i < 4; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0*4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 6; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 6; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 10; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(-2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 5; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i == 2) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
+            } else {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+
+        // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
+        // Draw a tile:
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        // Tweak our coordinate system downward 2 units for the next shape.
+        tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+
+
+        const t = this.t = program_state.animation_time / 1000;
+
+
+        tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
+            .times(Mat4.scale(1, 2, 1))
+            .times(Mat4.translation(0, -1.5, 0));
+        return tiles_transform;
+
+    }
+    select_tile(context, program_state, tiles_transform, index) {
+        if (index == 1) {
+            this.draw_tile_platform1(context, program_state, tiles_transform);
+        }
+        else if (index == 2) {
+            this.draw_tile_platform2(context, program_state, tiles_transform);
+        }
+        else if (index == 3) {
+            this.draw_tile_platform3(context, program_state, tiles_transform);
+        }
+        else if (index == 4) {
+            this.draw_tile_platform4(context, program_state, tiles_transform);
+        }
+        else if (index == 5) {
+            this.draw_tile_platform5(context, program_state, tiles_transform);
+        }
+    }
+    select_level(context, program_state, level_transform, index) {
+        if (index == 1) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level1);
+        }
+        else if (index == 2) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level2);
+        }
+        else if (index == 3) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level3);
+        }
+        else if (index == 4) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level4);
+        }
+        else if (index == 5) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level5);
+        }
+    }
     display(context, program_state) {
         super.display(context, program_state);
-        const brown = hex_color("#7B3F00")
+        const brown = hex_color("#7B3F00");
         let model_transform = this.current;
         model_transform = this.draw_block(context, program_state, model_transform, brown);
         this.prev = model_transform;
 
-        // TILES PLATFORM
         let tiles_transform = Mat4.identity();
-        tiles_transform = this.draw_tile_platform1(context, program_state, tiles_transform);
+        if ((this.goal_position[0] == this.cube_1_position[0]) && (this.goal_position[0] == this.cube_2_position[0])
+            && (this.goal_position[1] == this.cube_1_position[1]) && (this.goal_position[1] == this.cube_2_position[1])) {
+            this.i += 1;
+            // resets all of the variables to reset block information
+            this.next_stage();
+        }
+        // TILES PLATFORM
+        // select_tile chooses what platform to display depending on i, which is the level number
 
+        let level_transform = Mat4.identity();
+        let S1 = Mat4.scale(2, 2, 0);
+        let T1 = Mat4.translation(8, 7, 0);
+        level_transform = level_transform.times(T1).times(S1);
+
+        this.select_tile(context, program_state, tiles_transform, this.i);
+        this.select_level(context, program_state, level_transform, this.i);
     }
 }
