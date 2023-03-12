@@ -34,6 +34,8 @@ export class Bloxorz_Base extends Scene {
         this.prev_pos = "upright";
     }
     make_control_panel() {
+        this.key_triggered_button("Start game from beginning", ['Enter'], function () {
+        });
         this.key_triggered_button("Move block up", ['i'], function () {
             this.curr = "up";
             this.current = this.prev;
