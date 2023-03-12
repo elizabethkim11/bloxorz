@@ -326,7 +326,7 @@ export class Bloxorz extends Bloxorz_Base {
 
     }
     draw_tile_platform2(context, program_state, tiles_transform) {
-        this.goal_position = vec3(-5, 3, 0);
+        this.goal_position = vec3(-6, 4, 0);
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
         // for (let i = 0; i < maxz; i++) {
@@ -339,11 +339,11 @@ export class Bloxorz extends Bloxorz_Base {
         //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
         //
         // }
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 9; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
         }
-        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 3, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 8, 0, 0));
         tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
         for (let i = 0; i < 5; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
@@ -357,7 +357,7 @@ export class Bloxorz extends Bloxorz_Base {
         }
         tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 8, 0, 0));
         tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 6; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
         }
@@ -365,17 +365,18 @@ export class Bloxorz extends Bloxorz_Base {
         tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
         for (let i = 0; i < 8; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
-            if (i == 5) {
-                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
-            } else {
-                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
-            }
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+
         }
         tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 4, 0, 0));
         tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
         for (let i = 0; i < 6; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
-            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            if (i == 5) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
+            } else {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
         }
 
 
@@ -395,6 +396,82 @@ export class Bloxorz extends Bloxorz_Base {
             .times(Mat4.translation(0, -1.5, 0));
         return tiles_transform;
 
+    }
+    draw_tile_platform4(context, program_state, tiles_transform) {
+        this.goal_position = vec3(-4,  1, 0);
+        tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
+        let maxx = 3, maxz = 3;
+        // for (let i = 0; i < maxz; i++) {
+        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
+        //     for (let j = 0; j < maxx; j++) {
+        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
+        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
+        //     }
+        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
+        //
+        // }
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            if (i != 1) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.0 * 6, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(6.0, 0, 2.02));
+        for (let i = 0; i < 7; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
+            if (i != 4) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 6, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i == 8) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.goal);
+            } else if (i != 7 && i != 3) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 8, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 9; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            if (i != 5) {
+                this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+            }
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 5, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 5; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+        tiles_transform = tiles_transform.times(Mat4.translation(-2.02 * 4, 0, 0));
+        tiles_transform = tiles_transform.times(Mat4.translation(0, 0, 2.02));
+        for (let i = 0; i < 3; i++) {
+            tiles_transform = tiles_transform.times(Mat4.translation(2.02, 0, 0));
+            this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
+        }
+
+
+        // model_transform = model_transform.times(Mat4.scale(1, 1, 0.1));
+        // Draw a tile:
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+        // Tweak our coordinate system downward 2 units for the next shape.
+        tiles_transform = tiles_transform.times(Mat4.translation(0, -2.02, 0));
+        // this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
+
+
+        const t = this.t = program_state.animation_time / 1000;
+
+
+        tiles_transform = tiles_transform.times(Mat4.rotation(1, 0, 0, 1))
+            .times(Mat4.scale(1, 2, 1))
+            .times(Mat4.translation(0, -1.5, 0));
+        return tiles_transform;
     }
     select_tile(context, program_state, tiles_transform, index) {
         if (index == 1) {
