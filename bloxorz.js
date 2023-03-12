@@ -13,6 +13,7 @@ export class Bloxorz_Base extends Scene {
         this.shapes = {
             'block': new Block(),
             'tile': new Tiles(),
+            'square': new Square()
         }
         const phong = new defs.Phong_Shader();
         const textured = new defs.Textured_Phong(1);
@@ -24,7 +25,33 @@ export class Bloxorz_Base extends Scene {
             silver: new Material(phong,
                 {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("c0c0c0")}),
             goal: new Material(phong,
-                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")})
+                {ambient: .2, diffusivity: .8, specularity: .8, color: hex_color("abd7eb")}),
+            level1: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level1.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level2: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level2.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level3: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level3.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level4: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level4.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            level5: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/level5.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+
         }
         this.curr = "none";
         this.curr_pos = "upright";
@@ -35,6 +62,7 @@ export class Bloxorz_Base extends Scene {
         this.cube_1_position = vec3(0, 0,0);
         this.cube_2_position= vec3(0,0,0);
         this.goal_position = vec3(-2, 3, 0);
+        this.level_number = 0;
     }
     make_control_panel() {
         this.key_triggered_button("Move block up", ['i'], function () {
@@ -473,6 +501,23 @@ export class Bloxorz extends Bloxorz_Base {
             this.draw_tile_platform5(context, program_state, tiles_transform);
         }
     }
+    select_level(context, program_state, level_transform, index) {
+        if (index == 1) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level1);
+        }
+        else if (index == 2) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level2);
+        }
+        else if (index == 3) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level3);
+        }
+        else if (index == 4) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level4);
+        }
+        else if (index == 5) {
+            this.shapes.square.draw(context, program_state, level_transform, this.materials.level5);
+        }
+    }
     display(context, program_state) {
         super.display(context, program_state);
         const brown = hex_color("#7B3F00");
@@ -489,8 +534,13 @@ export class Bloxorz extends Bloxorz_Base {
         }
         // TILES PLATFORM
         // select_tile chooses what platform to display depending on i, which is the level number
-        this.i = 3;
-        this.select_tile(context, program_state, tiles_transform, this.i);
 
+        let level_transform = Mat4.identity();
+        let S1 = Mat4.scale(2, 2, 0);
+        let T1 = Mat4.translation(5, 5, 0);
+        level_transform = level_transform.times(T1).times(S1);
+
+        this.select_tile(context, program_state, tiles_transform, this.i);
+        this.select_level(context, program_state, level_transform, this.i);
     }
 }
