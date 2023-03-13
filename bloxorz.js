@@ -55,6 +55,11 @@ export class Bloxorz_Base extends Scene {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/bloxorz.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            win: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/win.png", "LINEAR_MIPMAP_LINEAR")
             })
         }
         this.curr = "none";
@@ -722,7 +727,7 @@ export class Bloxorz extends Bloxorz_Base {
             this.shapes.block.draw(context, program_state, Mat4.identity(), this.materials.metal);
         }
 
-        if (this.i >= 1) {
+        if (this.i >= 1 && this.i < 6) {
 
             // Set camera position and target position
             const camera_position = vec3(10, 10, -20);
@@ -761,6 +766,21 @@ export class Bloxorz extends Bloxorz_Base {
 
             this.select_tile(context, program_state, tiles_transform, this.i);
             this.select_level(context, program_state, level_transform, this.i);
+        }
+
+        if (this.i == 6) {
+            const camera_position = vec3(0, 0, -18);
+            const target_position = vec3(0, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+
+            let square_transform = Mat4.identity();
+            let S1 =  Mat4.scale(7.5, 7.5, 0);
+            square_transform = square_transform.times(S1);
+            this.shapes.square.draw(context, program_state, square_transform, this.materials.win);
         }
     }
 }
