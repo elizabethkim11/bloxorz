@@ -722,27 +722,18 @@ export class Bloxorz extends Bloxorz_Base {
             model_transform = this.draw_block(context, program_state, model_transform, brown);
             this.prev = model_transform;
 
-        let tiles_transform = Mat4.identity();
-        if ((this.goal_position[0] == this.cube_1_position[0]) && (this.goal_position[0] == this.cube_2_position[0])
-            && (this.goal_position[1] == this.cube_1_position[1]) && (this.goal_position[1] == this.cube_2_position[1])) {
-            this.i += 1;
-
-            // resets all of the variables to reset block information
-            if (this.i == 6) {
-                console.log("GAME OVER");
-            }
-            else {
-                this.next_stage();
-            }
-        }
-        // TILES PLATFORM
-        // select_tile chooses what platform to display depending on i, which is the level number
             let tiles_transform = Mat4.identity();
             if ((this.goal_position[0] == this.cube_1_position[0]) && (this.goal_position[0] == this.cube_2_position[0])
                 && (this.goal_position[1] == this.cube_1_position[1]) && (this.goal_position[1] == this.cube_2_position[1])) {
                 this.i += 1;
-                // resets all of the variables to reset block information
-                this.next_stage();
+
+            // resets all of the variables to reset block information
+                if (this.i == 6) {
+                    console.log("GAME OVER");
+                }
+                else {
+                    this.next_stage();
+                }
             }
             // TILES PLATFORM
             // select_tile chooses what platform to display depending on i, which is the level number
@@ -751,6 +742,7 @@ export class Bloxorz extends Bloxorz_Base {
             let S1 = Mat4.scale(2, 2, 0);
             let T1 = Mat4.translation(8, 7, 0);
             level_transform = level_transform.times(T1).times(S1);
+
             this.select_tile(context, program_state, tiles_transform, this.i);
             this.select_level(context, program_state, level_transform, this.i);
         }
