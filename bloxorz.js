@@ -60,6 +60,11 @@ export class Bloxorz_Base extends Scene {
                 color: hex_color("#000000"),
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/win.png", "LINEAR_MIPMAP_LINEAR")
+            }),
+            restart: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/restart.png", "LINEAR_MIPMAP_LINEAR")
             })
         }
         this.curr = "none";
