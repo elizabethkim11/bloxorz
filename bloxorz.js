@@ -66,10 +66,21 @@ export class Bloxorz_Base extends Scene {
         this.cube_1_position = vec3(0, 0,0);
         this.cube_2_position= vec3(0,0,0);
         this.goal_position = vec3(-2, 3, 0);
+        this.background_music = new Audio('assets/background_music.mp3');
+        this.bg_music = false;
     }
     make_control_panel() {
         this.key_triggered_button("Start game from beginning", ['Enter'], function () {
             this.i = 1;
+            this.curr = "none";
+            this.curr_pos = "upright";
+            this.prev = Mat4.identity();
+            this.current = Mat4.identity();
+            this.count = 0;
+            this.prev_pos = "upright";
+            this.cube_1_position = vec3(0, 0,0);
+            this.cube_2_position= vec3(0,0,0);
+            this.goal_position = vec3(-2, 3, 0);
         });
         this.key_triggered_button("Move block up", ['i'], function () {
             this.curr = "up";
@@ -183,6 +194,9 @@ export class Bloxorz_Base extends Scene {
         });
         this.new_line();
         this.new_line();
+        this.key_triggered_button("Music On/Off", ["m"], () => { this.bg_music = !this.bg_music });
+        this.new_line();
+        this.new_line();
         this.control_panel.innerHTML += "Count: ";
         this.live_string(box => {
             box.textContent = this.count + " moves"
@@ -190,21 +204,18 @@ export class Bloxorz_Base extends Scene {
 
     }
     display(context, program_state) {
-        if (!context.scratchpad.controls) {
-            this.children.push(context.scratchpad.controls = new defs.Movement_Controls());
+        // Set camera position and target position
+        const camera_position = vec3(10, 10, -15);
+        const target_position = vec3(0, 0, 0);
+        const up_vector = vec3(0, 1, 0);
 
-            // Set camera position and target position
-            const camera_position = vec3(10, 10, -15);
-            const target_position = vec3(0, 0, 0);
-            const up_vector = vec3(0, 1, 0);
+        // Create the camera matrix using the look_at function
+        const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
 
-            // Create the camera matrix using the look_at function
-            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+        // Set the camera matrix in the program state
+        program_state.set_camera(camera_matrix);
+        // program_state.set_camera(Mat4.translation(0, 0, -25));
 
-            // Set the camera matrix in the program state
-            program_state.set_camera(camera_matrix);
-            // program_state.set_camera(Mat4.translation(0, 0, -25));
-        }
         program_state.projection_transform = Mat4.perspective(
             Math.PI / 4, context.width / context.height, 1, 100);
 
@@ -688,6 +699,12 @@ export class Bloxorz extends Bloxorz_Base {
         super.display(context, program_state);
         const brown = hex_color("#7B3F00");
 
+        if (this.bg_music) {
+            this.background_music.play();
+        } else {
+            this.background_music.pause();
+        }
+
         if (this.i == 0) {
             const camera_position = vec3(10, 2, -18);
             const target_position = vec3(8.5, 0, 0);
@@ -708,7 +725,7 @@ export class Bloxorz extends Bloxorz_Base {
         if (this.i >= 1) {
 
             // Set camera position and target position
-            const camera_position = vec3(10, 10, -15);
+            const camera_position = vec3(10, 10, -20);
             const target_position = vec3(0, 0, 0);
             const up_vector = vec3(0, 1, 0);
 
@@ -737,7 +754,6 @@ export class Bloxorz extends Bloxorz_Base {
             }
             // TILES PLATFORM
             // select_tile chooses what platform to display depending on i, which is the level number
-
             let level_transform = Mat4.identity();
             let S1 = Mat4.scale(2, 2, 0);
             let T1 = Mat4.translation(8, 7, 0);
