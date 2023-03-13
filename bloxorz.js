@@ -51,7 +51,11 @@ export class Bloxorz_Base extends Scene {
                 ambient: 1, diffusivity: 0.1, specularity: 0.1,
                 texture: new Texture("assets/level5.png", "LINEAR_MIPMAP_LINEAR")
             }),
-
+            title: new Material(new Textured_Phong(), {
+                color: hex_color("#000000"),
+                ambient: 1, diffusivity: 0.1, specularity: 0.1,
+                texture: new Texture("assets/bloxorz.png", "LINEAR_MIPMAP_LINEAR")
+            })
         }
         this.curr = "none";
         this.curr_pos = "upright";
@@ -65,6 +69,7 @@ export class Bloxorz_Base extends Scene {
     }
     make_control_panel() {
         this.key_triggered_button("Start game from beginning", ['Enter'], function () {
+            this.i += 1;
         });
         this.key_triggered_button("Move block up", ['i'], function () {
             this.curr = "up";
@@ -212,7 +217,7 @@ export class Bloxorz_Base extends Scene {
 }
 
 export class Bloxorz extends Bloxorz_Base {
-    i = 1;
+    i = 0;
     next_stage() {
         this.curr = "none";
         this.curr_pos = "upright";
@@ -599,26 +604,57 @@ export class Bloxorz extends Bloxorz_Base {
     display(context, program_state) {
         super.display(context, program_state);
         const brown = hex_color("#7B3F00");
-        let model_transform = this.current;
-        model_transform = this.draw_block(context, program_state, model_transform, brown);
-        this.prev = model_transform;
 
-        let tiles_transform = Mat4.identity();
-        if ((this.goal_position[0] == this.cube_1_position[0]) && (this.goal_position[0] == this.cube_2_position[0])
-            && (this.goal_position[1] == this.cube_1_position[1]) && (this.goal_position[1] == this.cube_2_position[1])) {
-            this.i += 1;
-            // resets all of the variables to reset block information
-            this.next_stage();
+        if (this.i == 0) {
+            const camera_position = vec3(10, 2, -18);
+            const target_position = vec3(8.5, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+
+            let square_transform = Mat4.identity();
+            let T1 =  Mat4.translation(10.5, 1, 0);
+            let S1 =  Mat4.scale(7.5, 7.5, 0);
+            square_transform = square_transform.times(T1).times(S1);
+            this.shapes.square.draw(context, program_state, square_transform, this.materials.title);
+            this.shapes.block.draw(context, program_state, Mat4.identity(), this.materials.metal);
         }
-        // TILES PLATFORM
-        // select_tile chooses what platform to display depending on i, which is the level number
 
-        let level_transform = Mat4.identity();
-        let S1 = Mat4.scale(2, 2, 0);
-        let T1 = Mat4.translation(8, 7, 0);
-        level_transform = level_transform.times(T1).times(S1);
+        if (this.i >= 1) {
 
-        this.select_tile(context, program_state, tiles_transform, this.i);
-        this.select_level(context, program_state, level_transform, this.i);
+            // Set camera position and target position
+            const camera_position = vec3(10, 10, -15);
+            const target_position = vec3(0, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+
+            // Create the camera matrix using the look_at function
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+            // program_state.set_camera(Mat4.translation(0, 0, -25));
+            let model_transform = this.current;
+            model_transform = this.draw_block(context, program_state, model_transform, brown);
+            this.prev = model_transform;
+
+            let tiles_transform = Mat4.identity();
+            if ((this.goal_position[0] == this.cube_1_position[0]) && (this.goal_position[0] == this.cube_2_position[0])
+                && (this.goal_position[1] == this.cube_1_position[1]) && (this.goal_position[1] == this.cube_2_position[1])) {
+                this.i += 1;
+                // resets all of the variables to reset block information
+                this.next_stage();
+            }
+            // TILES PLATFORM
+            // select_tile chooses what platform to display depending on i, which is the level number
+
+            let level_transform = Mat4.identity();
+            let S1 = Mat4.scale(2, 2, 0);
+            let T1 = Mat4.translation(8, 7, 0);
+            level_transform = level_transform.times(T1).times(S1);
+            this.select_tile(context, program_state, tiles_transform, this.i);
+            this.select_level(context, program_state, level_transform, this.i);
+        }
     }
 }

@@ -40,7 +40,7 @@ Object.assign(defs,
 // ******************** End extra step
 
 // (Can define Main_Scene's class here)
-const Main_Scene = Title;
+const Main_Scene = Bloxorz;
 
 const Additional_Scenes = [];
 
