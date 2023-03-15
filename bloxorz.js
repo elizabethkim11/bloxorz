@@ -253,8 +253,8 @@ export class Bloxorz extends Bloxorz_Base {
         const angle = Math.PI/2;
         if (this.curr == "left") {
             //console.log(this.shapes.block.position);
-            console.log("LEFT");
-            console.log(this.curr_pos);
+            //console.log("LEFT");
+            //console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(3, 1, 0)));
             } else if (this.curr_pos == "sideways") {
@@ -263,12 +263,12 @@ export class Bloxorz extends Bloxorz_Base {
                 model_transform = model_transform.times(Mat4.rotation(angle*3, 0, 0, 1)).times((Mat4.translation(1, 3, 0)));
             }
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal);
-            console.log(model_transform);
+            //console.log(model_transform);
         }
         else if (this.curr == "right") {
-            console.log("RIGHT");
-            console.log(model_transform);
-            console.log(this.curr_pos);
+            //console.log("RIGHT");
+            //console.log(model_transform);
+            //console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 0, 0, 1)).times((Mat4.translation(-3, 1, 0)));
             } else if (this.curr_pos == "sideways") {
@@ -279,9 +279,9 @@ export class Bloxorz extends Bloxorz_Base {
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal);
         }
         else if (this.curr == "up") {
-            console.log("UP");
-            console.log(model_transform);
-            console.log(this.curr_pos);
+            //console.log("UP");
+            //console.log(model_transform);
+            //console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, 3)));
             } else if (this.curr_pos == "sideways") {
@@ -292,9 +292,9 @@ export class Bloxorz extends Bloxorz_Base {
             this.shapes.block.draw(context, program_state, model_transform, this.materials.metal);
         }
         else if (this.curr == "down") {
-            console.log("DOWN");
-            console.log(model_transform);
-            console.log(this.curr_pos);
+            //console.log("DOWN");
+            //console.log(model_transform);
+            //console.log(this.curr_pos);
             if (this.curr_pos == "upright") {
                 model_transform = model_transform.times(Mat4.rotation(angle, 1, 0, 0)).times((Mat4.translation(0, 1, -3)));
             } else if (this.curr_pos == "sideways") {
@@ -705,6 +705,11 @@ export class Bloxorz extends Bloxorz_Base {
             this.shapes.square.draw(context, program_state, level_transform, this.materials.level5);
         }
     }
+    check_boundaries(index) {
+        if (index == 1) {
+            return [[0,-1], [1,-1], [2,-1], [3,-2], [4,-2], [5,-2], [6,-1], [6,0], [6,1], [5,2],]
+        }
+    }
     display(context, program_state) {
         super.display(context, program_state);
         const brown = hex_color("#7B3F00");
@@ -750,16 +755,31 @@ export class Bloxorz extends Bloxorz_Base {
             this.prev = model_transform;
 
             let tiles_transform = Mat4.identity();
+
             if ((this.goal_position[0] == this.cube_1_position[0]) && (this.goal_position[0] == this.cube_2_position[0])
                 && (this.goal_position[1] == this.cube_1_position[1]) && (this.goal_position[1] == this.cube_2_position[1])) {
                 this.i += 1;
-
-            // resets all of the variables to reset block information
+                // resets all of the variables to reset block information
                 if (this.i == 6) {
                     console.log("GAME OVER");
                 }
                 else {
                     this.next_stage();
+                }
+            }
+
+            const boundaries = this.check_boundaries(this.i);
+            for (let a = 0; a < boundaries.length; a++) {
+                let x = boundaries[a][0];
+                let y = boundaries[a][1];
+                console.log(x);
+                console.log(y);
+                console.log(this.cube_2_position);
+                console.log(this.cube_1_position);
+                if ((this.cube_1_position[0] == x && this.cube_1_position[1] == y) ||
+                    (this.cube_2_position[0] == x && this.cube_2_position[1] == y)) {
+                    console.log("DIE");
+                    this.i = 7;
                 }
             }
             // TILES PLATFORM
@@ -772,7 +792,6 @@ export class Bloxorz extends Bloxorz_Base {
             this.select_tile(context, program_state, tiles_transform, this.i);
             this.select_level(context, program_state, level_transform, this.i);
         }
-
         if (this.i == 6) {
             const camera_position = vec3(0, 0, -18);
             const target_position = vec3(0, 0, 0);
@@ -786,6 +805,20 @@ export class Bloxorz extends Bloxorz_Base {
             let S1 =  Mat4.scale(7.5, 7.5, 0);
             square_transform = square_transform.times(S1);
             this.shapes.square.draw(context, program_state, square_transform, this.materials.win);
+        }
+        if (this.i == 7) {
+            const camera_position = vec3(0, 0, -18);
+            const target_position = vec3(0, 0, 0);
+            const up_vector = vec3(0, 1, 0);
+            const camera_matrix = Mat4.look_at(camera_position, target_position, up_vector);
+
+            // Set the camera matrix in the program state
+            program_state.set_camera(camera_matrix);
+
+            let square_transform = Mat4.identity();
+            let S1 =  Mat4.scale(7.5, 7.5, 0);
+            square_transform = square_transform.times(S1);
+            this.shapes.square.draw(context, program_state, square_transform, this.materials.restart);
         }
     }
 }
