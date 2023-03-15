@@ -313,16 +313,6 @@ export class Bloxorz extends Bloxorz_Base {
         this.goal_position = vec3(-2, 3, 0);
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
-        // for (let i = 0; i < maxz; i++) {
-        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
-        //     for (let j = 0; j < maxx; j++) {
-        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
-        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
-        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
-        //     }
-        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
-        //
-        // }
         for (let i = 0; i < 3; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
@@ -384,16 +374,6 @@ export class Bloxorz extends Bloxorz_Base {
         this.goal_position = vec3(-6, 4, 0);
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
-        // for (let i = 0; i < maxz; i++) {
-        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
-        //     for (let j = 0; j < maxx; j++) {
-        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
-        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
-        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
-        //     }
-        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
-        //
-        // }
         for (let i = 0; i < 9; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
@@ -456,16 +436,6 @@ export class Bloxorz extends Bloxorz_Base {
         this.goal_position = vec3(-4,  1, 0);
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
-        // for (let i = 0; i < maxz; i++) {
-        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
-        //     for (let j = 0; j < maxx; j++) {
-        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
-        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
-        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
-        //     }
-        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
-        //
-        // }
         for (let i = 0; i < 3; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
             if (i != 1) {
@@ -592,16 +562,6 @@ export class Bloxorz extends Bloxorz_Base {
         this.goal_position = vec3(0, 3, 0);
         tiles_transform = tiles_transform.times(Mat4.translation(-12, -2, -2));
         let maxx = 3, maxz = 3;
-        // for (let i = 0; i < maxz; i++) {
-        //     model_transform = model_transform.times(Mat4.translation(0, 0, -2.02));
-        //     for (let j = 0; j < maxx; j++) {
-        //         model_transform = model_transform.times(Mat4.translation(2.02, 0, 0));
-        //         this.shapes.tile.draw(context, program_state, model_transform, this.materials.silver);
-        //         // model_transform = model_transform.times(Mat4.translation(-2.02, 0, 0));
-        //     }
-        //     model_transform = model_transform.times(Mat4.translation(-2.02 * maxx, 0, 0));
-        //
-        // }
         for (let i = 0; i < 10; i++) {
             tiles_transform = tiles_transform.times(Mat4.translation(2.0, 0, 0));
             this.shapes.tile.draw(context, program_state, tiles_transform, this.materials.silver);
@@ -708,6 +668,17 @@ export class Bloxorz extends Bloxorz_Base {
     check_boundaries(index) {
         if (index == 1) {
             return [[0,-1], [1,-1], [2,-1], [3,-2], [4,-2], [5,-2], [6,-1], [6,0], [6,1], [5,2],]
+        }
+        if (index == 2) {
+            return [[-3,-2],[-2,-2],[-1,-2],[0,-2],[1,-2],[2,-2],[3,-2],[4,-2],[5,-2],
+                [-4,1],[6,1],
+                [-3,0],[-2,0],[-1,0],[5,0],
+                [-4,1],[6,1],
+                [-4,2],[-3,2],[-2,2],[5,2],
+                [-6,3],[-5,3],[4,3],
+                [-7,4],[0,4],[1,4],[2,4],[3,4],
+                [-6,5], [-5,5], [-4,5], [-3,5], [-2,5], [-2,5], [-1,5]
+            ]
         }
     }
     display(context, program_state) {
