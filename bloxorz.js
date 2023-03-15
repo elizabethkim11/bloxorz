@@ -706,8 +706,13 @@ export class Bloxorz extends Bloxorz_Base {
         }
     }
     check_boundaries(index) {
+        // index = level number
         if (index == 1) {
-            return [[0,-1], [1,-1], [2,-1], [3,-2], [4,-2], [5,-2], [6,-1], [6,0], [6,1], [5,2],]
+            return [[0,-1], [1,-1], [2,-1], [3,-2], [4,-2], [5,-2], [6,-1], [6,0], [6,1], [5,2], [4,3], [3,3], [2,3],
+                [1,3], [0,4], [-1,5], [-2,5], [-3,5], [-4, 4], [-5,3], [-5,2], [-4,1], [-4,0], [-3,0], [-2,0], [-1,0]];
+        }
+        else if (index == 3) {
+            return [[0,-1], [1,0], [1,1], [2,-1], [3,-2],];
         }
     }
     display(context, program_state) {
@@ -820,5 +825,6 @@ export class Bloxorz extends Bloxorz_Base {
             square_transform = square_transform.times(S1);
             this.shapes.square.draw(context, program_state, square_transform, this.materials.restart);
         }
+        this.i = 3;
     }
 }
