@@ -757,18 +757,20 @@ export class Bloxorz extends Bloxorz_Base {
                     this.next_stage();
                 }
             }
-            const boundaries = this.check_boundaries(this.i);
-            for (let a = 0; a < boundaries.length; a++) {
-                let x = boundaries[a][0];
-                let y = boundaries[a][1];
-                console.log(x);
-                console.log(y);
-                console.log(this.cube_2_position);
-                console.log(this.cube_1_position);
-                if ((this.cube_1_position[0] == x && this.cube_1_position[1] == y) ||
-                    (this.cube_2_position[0] == x && this.cube_2_position[1] == y)) {
-                    console.log("DIE");
-                    this.i = 7;
+            if (this.i != 6 && this.i != 7) {
+                const boundaries = this.check_boundaries(this.i);
+                for (let a = 0; a < boundaries.length; a++) {
+                    let x = boundaries[a][0];
+                    let y = boundaries[a][1];
+                    console.log(x);
+                    console.log(y);
+                    console.log(this.cube_2_position);
+                    console.log(this.cube_1_position);
+                    if ((this.cube_1_position[0] == x && this.cube_1_position[1] == y) ||
+                        (this.cube_2_position[0] == x && this.cube_2_position[1] == y)) {
+                        console.log("DIE");
+                        this.i = 7;
+                    }
                 }
             }
             // TILES PLATFORM
