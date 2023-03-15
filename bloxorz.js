@@ -723,6 +723,11 @@ export class Bloxorz extends Bloxorz_Base {
                 [4, 1], [3, 1], [2, 1], [4, 0], [4, -1], [3, -2], [2, -2],
                 [1, -2], [0, -2], [0, 2]];
         }
+        else if (index == 5) {
+            return [[-1,0], [-2,0], [0,-2], [-1,-2], [-2,-2], [-3,-2], [-4,-2], [1,-2], [2,-2], [3,-2], [4,-2], [5,-2], [6,-1],
+            [5,0], [4,0], [3,0], [5,1], [4,2], [3,2], [2,1], [1,1], [0,2], [1,3], [0,4], [-1,4], [-2,5], [-3,5], [-4,5], [-5,5], [-6,5], [-7,5],
+            [-8,4], [-7,3], [-8,3], [-9,2], [-8,1], [-7,1], [-8,0], [-7,-1], [-6,-1], [-5,-1], [-2,2], [-4,3]];
+        }
     }
     display(context, program_state) {
         super.display(context, program_state);
@@ -833,5 +838,6 @@ export class Bloxorz extends Bloxorz_Base {
             square_transform = square_transform.times(S1);
             this.shapes.square.draw(context, program_state, square_transform, this.materials.restart);
         }
+        this.i = 5;
     }
 }
