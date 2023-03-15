@@ -709,6 +709,14 @@ export class Bloxorz extends Bloxorz_Base {
         if (index == 1) {
             return [[0,-1], [1,-1], [2,-1], [3,-2], [4,-2], [5,-2], [6,-1], [6,0], [6,1], [5,2],]
         }
+        if (index == 4) {
+            return [[-1, -1], [-2, -1], [-3, -1], [-3, 0], [-4, 0], [-5, 1],
+                [-4, 2], [-3, 2], [-2, 2], [-1, 2], [1, 3], [2, 3], [3, 3],
+                [4, 4], [5, 5], [6, 5], [7, 5], [8, 4], [9, 3], [10, 3],
+                [11, 2], [10, 1], [9, 1], [8, 1], [7, 1], [6, 1], [5, 1],
+                [4, 1], [3, 1], [2, 1], [4, 0], [4, -1], [3, -2], [2, -2],
+                [1, -2], [0, -2], [0, 2]];
+        }
     }
     display(context, program_state) {
         super.display(context, program_state);
@@ -767,7 +775,6 @@ export class Bloxorz extends Bloxorz_Base {
                     this.next_stage();
                 }
             }
-
             const boundaries = this.check_boundaries(this.i);
             for (let a = 0; a < boundaries.length; a++) {
                 let x = boundaries[a][0];
